@@ -17,6 +17,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 import java.util.List;
 
+// TODO: 27.04.2022 учесть стуктуру папок во всех исходных файлах
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.game")
