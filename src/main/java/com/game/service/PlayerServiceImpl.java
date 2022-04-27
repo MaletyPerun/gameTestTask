@@ -20,7 +20,8 @@ public class PlayerServiceImpl implements PlayerService {
     private static final int PLAYER_EXPERIENCE_MINIMUM = 0;
     private static final int PLAYER_EXPERIENCE_MAXIMUM = 10_000_000;
     private static final long PLAYER_DATE_MINIMUM = 946_674_000_000L;
-    private static final long PLAYER_DATE_MAXIMUM = 32_535_118_800_000L;
+    private static final long PLAYER_DATE_MAXIMUM = 32_535_205_199_000L;
+
 
     private final PlayerRepository playerRepository;
 
@@ -112,11 +113,25 @@ public class PlayerServiceImpl implements PlayerService {
     // TODO: 27.04.2022 аккуратно проверить на корректность логики замены id игроков и дальнейшая запись в репозиторий player
     //  взял из примера логику: у player присваиваем id oldPlayer
     //  и берем значения полей oldPlayer при null полей player
+
+    // TODO: 27.04.2022 убедиться в корректности использования полей
     private void updateFields(Player oldPlayer, Player player) {
         // обновлять только те поля, которые не null
         player.setId(oldPlayer.getId());
-        if (player.getName() != null)
-
+        if (player.getName() == null)
+            player.setName(oldPlayer.getName());
+        if (player.getTitle() == null)
+            player.setTitle(oldPlayer.getTitle());
+        if (player.getRace() == null)
+            player.setRace(oldPlayer.getRace());
+        if (player.getProfession() == null)
+            player.setProfession(oldPlayer.getProfession());
+        if (player.getExperience() == null)
+            player.setExperience(oldPlayer.getExperience());
+        if (player.getBirthday() == null)
+            player.setBirthday(oldPlayer.getBirthday());
+        if (player.getBanned() == null)
+            player.setBanned(oldPlayer.getBanned());
 
     }
 }
