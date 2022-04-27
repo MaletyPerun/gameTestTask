@@ -1,10 +1,15 @@
 package com.game.service;
 
+import com.game.controller.PlayerOrder;
 import com.game.entity.Player;
 import com.game.exception.DBDataException;
 import com.game.exception.NotFoundException;
 import com.game.repository.PlayerRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -40,7 +45,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public void deleteShip(Long id) {
+    public void deletePlayer(Long id) {
         checkIdPositive(id);
         if (!playerRepository.existsById(id))
             throw new NotFoundException();
@@ -49,7 +54,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player createShip(Player player) {
+    public Player createPlayer(Player player) {
         checkFields(player);
         checkConstraints(player);
         calculateExperience(player);
@@ -57,7 +62,7 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public Player updateShip(Long id, Player player) {
+    public Player updatePlayer(Long id, Player player) {
         checkIdPositive(id);
         Player oldPlayer = playerRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
@@ -69,13 +74,21 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<Player> getShips(Map<String, String> paramList) {
-        return null;
+    public List<Player> getPlayers(Map<String, String> paramList) {
+        int pageNumber = Integer.parseInt(paramList.get("pageNumber"));
+        int pageSize = Integer.parseInt(paramList.get("pageSize"));
+        Sort sort = Sort.by("id");
+        if (paramList.containsKey("order")) {
+            sort = Sort.by(PlayerOrder.valueOf(paramList.get("order")).getFieldName());
+        }
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Player> page = playerRepository.findAll(new PlayerSpecification(paramList), pageable);
+        return page.getContent();
     }
 
     @Override
     public Integer getCount(Map<String, String> paramsList) {
-        return null;
+        return playerRepository.findAll(new PlayerSpecification(paramsList)).size();
     }
 
     private void checkIdPositive(Long id) {
@@ -132,6 +145,5 @@ public class PlayerServiceImpl implements PlayerService {
             player.setBirthday(oldPlayer.getBirthday());
         if (player.getBanned() == null)
             player.setBanned(oldPlayer.getBanned());
-
     }
 }

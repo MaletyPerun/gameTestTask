@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.ViewResolver;
@@ -20,7 +21,8 @@ import java.util.List;
 // TODO: 27.04.2022 учесть стуктуру папок во всех исходных файлах
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.game")
+@ComponentScan("com.game.controller")
+@EnableJpaRepositories("com.game.controller")
 public class WebConfig implements WebMvcConfigurer {
 
 
